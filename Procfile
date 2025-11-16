@@ -1,2 +1,2 @@
-release: python -c 'from app import app, db; with app.app_context(): db.create_all()'
+release: python createdb.py
 web: gunicorn --pythonpath . app:app
