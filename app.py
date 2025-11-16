@@ -1,11 +1,12 @@
-
-
 from flask import Flask
 from views import main_blueprint
 from auth import auth_blueprint
 from models import db, User
 from flask_login import LoginManager
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres", "postgresql", 1)

@@ -1,21 +1,10 @@
-// toggle task completion status
-function toggleTaskStatus(taskId) {
-  console.log(`Toggling status for task with ID: ${taskId}`);
-  fetch(`/api/v1/tasks/${taskId}`, { method: 'PATCH' })
-    .then(response => {
-      if (response.ok) {
-        const taskElement = document.getElementById(`task-${taskId}`);
-        taskElement.classList.toggle('completed');
-      }
-    });
-}
-
 // add item to todo list
 function addTaskToList(task) {
   const taskList = document.getElementById('task-list');
   const li = document.createElement('li');
-  li.textContent = task.title;
-  li.innerHTML += ` <a href="#" id="task-${task.id}" class="remove-btn" onclick="removeTask(${task.id})">🗑️</a>`;
+  const titleHtml = `<span onclick="toggleTask(${task.id})">${task.title}</span>`;
+  const removeButtonHtml = ` <a href="#" id="task-${task.id}" class="remove-btn" onclick="removeTask(${task.id})">🗑️</a>`;
+  li.innerHTML = titleHtml + removeButtonHtml;
   taskList.appendChild(li);
 }
 
@@ -58,7 +47,7 @@ function loadTasks() {
 // remove task function
 function removeTask(taskId) {
   console.log(`Removing task with ID: ${taskId}`);
-  fetch(`/remove/${taskId}`, { method: 'GET' })
+  fetch(`/api/v1/tasks/${taskId}`, { method: 'DELETE' })
     .then(response => {
       if (response.ok) {
         document.getElementById(`task-${taskId}`).closest('li').remove();
@@ -66,6 +55,16 @@ function removeTask(taskId) {
     });
 }
 
+// toggle task function
+function toggleTask(taskId) {
+  console.log(`Toggling task with ID: ${taskId}`);
+  fetch(`/api/v1/tasks/${taskId}`, { method: 'POST' })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById(`task-${taskId}`).closest('li').classList.toggle('completed');
+      }
+    });
+}
 
 // main function calls
 loadTasks();
